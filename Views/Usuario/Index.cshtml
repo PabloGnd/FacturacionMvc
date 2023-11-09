@@ -1,0 +1,278 @@
+﻿@model List<VMUsuarios>
+
+
+
+<div class="container">
+    <h1 class="text-center">Usuarios</h1>
+</div>
+<br />
+
+
+
+@foreach (var item in Model)
+{
+
+    <div class="row padd">
+
+        <div class="accordion col-12">
+            <div class="accordion-item">
+                <div class="row paddCliente">
+                    <div class="col-1 text-center cliente1  ">
+                        <h3 class="text-center"><i class="fa-regular fa-circle-user text-primary"></i></h3>
+                    </div>
+                    <div class="col-9 ">
+                        <div class="col-3 ">
+
+                            <h6 class="small">@item.NombreUsuario</h6>
+                        </div>
+
+                    </div>
+                    <div class="col p-1"><a class="nav-link px-0 align-middle" data-bs-toggle="modal" data-bs-target="#Eliminar_@item.IdUsuario"><i class="fa-solid fa-trash  "></i></a></div>
+                    <div class="col cliente2 p-1"><a class="nav-link px-0 align-middle" data-bs-toggle="modal" data-bs-target="#Modal_@item.IdUsuario"><i class="fa-solid fa-pen"></i></a></div>
+                    <div class="col cliente2 p-1"><a class="nav-link px-0 align-middle consulta" IdUsuario="@item.IdUsuario" data-bs-toggle="modal" id="ModalPermisos" data-bs-target="#ModalPermisos_@item.IdUsuario"><i class="fa-solid fa-pen-nib"></i></a></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @*Modal Eliminar*@
+    <div class="modal fade" id="Eliminar_@item.IdUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <svg class="bi flex-shrink-0 me-2 text-danger " width="50" height="50" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                    </div>
+                    <div class=" row alert  justify-content-center" role="alert">
+                        <div class="col-auto">
+                            <h5>
+                                Desea Eliminar al Cliente ¿@item.NombreUsuario?
+                            </h5>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" asp-action="Eliminar" asp-controller="Usuario" asp-route-intIdUsuario="@item.IdUsuario">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*modal editar usuario*@
+    <form id="FrmEditar" asp-action="GuardarUsuario" asp-controller="Usuario" method="post">
+        <div class="modal fade" id="Modal_@item.IdUsuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="text" class="form-control" placeholder="IdUsuario" aria-label="IdUsuario" value="@item.IdUsuario" name="IdUsuario" readonly>
+
+                        <label class="form-label">Nombre</label>
+
+                        <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nombre" aria-label="Nombres" value="@item.NombreUsuario" name="Nombre" id="validationNombre" aria-describedby="inputGroupPrepend">
+
+                        <label for="validationApellido" class="form-label">Nik Usuario</label>
+
+                        <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nik Usuario" aria-label="Apellidos" value="@item.NikUsuario" name="NikUsuario" id="validationApellido" aria-describedby="inputGroupPrepend">
+
+                        <label for="" class="form-label">Nik Usuario</label>
+
+                        <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Contraseña" aria-label="Apellidos" name="Contrasenia" value="@item.Contrasenia" id="" aria-describedby="inputGroupPrepend">
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                        <button type="submit" class="btn btn-primary ">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    @*@*modal editar permisos*@
+
+    <div class="modal fade" id="ModalPermisos_@item.IdUsuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="lstPermisos_@item.IdUsuario"></div>
+                    
+                    
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                    <button type="button" class="btn btn-primary Guardar" id="" asp-controller="Usuario" asp-action="Lista" data-bs-dismiss="modal">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+@*Botones Nuevo y buscar*@
+<div class="continer  ">
+
+
+    <div class="col-3 d-grid cmn-divfloat " id="div-totop">
+        <button type="button" href="#span-top" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#ModalNuevo"><i class="fa-solid fa-plus"></i>Nuevo</button>
+    </div>
+    <div class="col-3 d-grid cmn-divfloat1 " id="div-totop">
+        <button class="btn btn-primary" id="LupaProducto"><i class="fa-solid fa-magnifying-glass"></i>Buscar</button>
+    </div>
+
+
+</div>
+
+
+
+
+
+@*modal nuevo usuario*@
+<form id="FrmEditar" asp-action="GuardarUsuario" asp-controller="Usuario" method="post">
+    <div class="modal fade" id="ModalNuevo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <input type="text" class="form-control" placeholder="IdUsuario" aria-label="IdUsuario" value="" name="IdUsuario" readonly>
+
+                    <label class="form-label">Nombre</label>
+
+                    <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nombre" aria-label="Nombres" value="" name="Nombre" id="validationNombre" aria-describedby="inputGroupPrepend">
+
+                    <label for="validationApellido" class="form-label">Nik Usuario</label>
+
+                    <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nik Usuario" aria-label="Apellidos" value="" name="NikUsuario" id="validationApellido" aria-describedby="inputGroupPrepend">
+
+                    <label for="" class="form-label">Nik Usuario</label>
+
+                    <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Contraseña" aria-label="Apellidos" name="Contrasenia" value="" id="" aria-describedby="inputGroupPrepend">
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+    {
+    <script>
+        $(function () {
+            let Permisos = [];
+            $(document).on("click", "a.consulta", function () {
+                let Permisos = null;
+                var IdUsuario = $(this).attr("IdUsuario");
+                var contenido = '';
+                $("#lstPermisos_" + IdUsuario).html("");
+
+                $.ajax({
+                    type: "POST",
+                    url: "ConsultaPermisos",
+                    dataType: "json",
+                    data: { IdUsuario: IdUsuario },
+
+                    success: function (response) {
+                        var contenido = '';
+                        $("#lstPermisos_"+IdUsuario).html("");
+                        
+                        $.each(response.value, function (index, value) {
+
+                            if (value.estado == true) {
+
+                                contenido += '<div class="form-check"><input class="form-check-input permiso" type = "checkbox"   id = " ' + value.idModulo + ' " IdPermiso = "' + value.idPermisos + '" Estado = "' + value.estado + '" IdUsuario = "' + value.idUsuario + '" checked ><label class="form-check-label" for= "flexCheckChecked">' + value.descripcionModulo + '</label></div>';
+
+                            } else {
+
+                                contenido += '<div class="form-check"><input class="form-check-input permiso" type = "checkbox"   id = " ' + value.idModulo + ' " IdPermiso = "' + value.idPermisos + '" Estado = "' + value.estado + '" IdUsuario = "'+value.idUsuario+'" ><label class="form-check-label" for= "flexCheckChecked">' + value.descripcionModulo + '</label></div>';
+                            }
+
+                        });
+                        
+                        $("#lstPermisos_" + IdUsuario).html(contenido);
+                    },
+                    error: function (req, status, error) {
+                    }
+                });
+            });
+            
+
+
+            $(document).on("click", "button.Guardar", function () {
+                
+
+                
+
+                $("input.permiso").each(function () {
+                    
+                    var IdModulo = $(this).attr("id");
+                    var IdPermiso = $(this).attr("IdPermiso");
+                    var miCheckbox = document.getElementById(IdModulo);
+                    var Estado = $(this).attr("Estado");
+                    var IdUsuario = $(this).attr("IdUsuario");
+                    
+                    if (miCheckbox.checked) {
+                            Estado = "true";
+
+                        
+                    } else {
+                            Estado = "false";
+
+                        }
+                    obj = {
+                        
+                        "IdPermisos": IdPermiso,
+                        "IdModulo": IdModulo,
+                        "IdUsuario": IdUsuario,
+                        "Estado": Estado,
+                    };
+                    Permisos.push(obj);
+                });
+                Obj = null;
+                console.log(Permisos);
+                $.ajax({
+                    type: "POST",
+                    url: "GuardarPermisos",
+                    data:
+                        { Permisos: Permisos },
+                    dataType: "json",
+                    success: function (data) {
+
+                        
+                        console.log(data)
+
+                    },
+                    error: function (request, status, errorThrown) {
+                        alert(status);
+                    }
+                });
+            });
+        });
+
+
+
+    </script>
+    }
+

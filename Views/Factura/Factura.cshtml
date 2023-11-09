@@ -1,0 +1,977 @@
+﻿@*@model Cliente*@
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor objAccesor;
+
+@{
+
+}
+<div class="container">
+    <div class="row paddFactura ">
+
+        <div class="col-12 p-1 border bg-light rounded border">
+
+            <h1 class="text-center">Factura</h1>
+            <!-- @*Empieza el acordion*@ -->
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <div class="row">
+                        <div class="col-1 text-center">
+                            <a id="LupaCliente"
+                               class="nav-link align-middle px-0 align-middle" data-bs-toggle="modal"
+                               data-bs-target="#ModalCliente">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                        aria-expanded="true" aria-controls="collapseOne">
+                                    <div id="Nombre"></div>
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                    <div id="collapseOne" class="accordion-collapse collapse "
+                         aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="row accordion-body">
+                            <div class="col-2"></div>
+                            <div class="col-8 text-center">
+
+
+                                <input type="text" class="form-control text-center hide"
+                                       placeholder="Id" value="" name="" id="txtIdCliente"><br />
+                                <select class="form-select" value="" name="TipoIdentificacion" id="strTipoIdentificacion">
+
+                                    <option value="05">Cedula</option>
+                                    <option selected value="04">Ruc</option>
+                                    <option value="06">Pasaporte</option>
+                                </select>
+                                <br />
+                                <div class="input-group has-validation">
+                                    <input type="text" class="form-control ValidacionIdentificacion" placeholder="Identificacion" id="txtPresentarIdentificacion" aria-describedby="inputGroupPrepend">
+                                    <div id="validationIdentificacionRuc" class="invalid-feedback">
+                                        Debe tener 13 caracteres
+                                    </div>
+                                    <div id="validationIdentificacionCedula" class="invalid-feedback">
+                                        Debe tener 10 caracteres
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="input-group has-validation">
+                                    <input type="text" onkeyup="mayus(this);" class="form-control ValidacionNombre" placeholder="Nombre" id="txtPresentarNombre" aria-describedby="inputGroupPrepend">
+                                    <div id="ValidationNombre" class="invalid-feedback">
+                                        El campo no puede estar en blanco.
+                                    </div>
+                                </div>
+                                <br />
+
+                                <div class="input-group has-validation">
+                                    <input type="text" onkeyup="mayus(this);" class="form-control ValidacionApellido" placeholder="Apellido" id="txtPresentarApellido" aria-describedby="inputGroupPrepend">
+                                    <div id="ValidationApellido" class="invalid-feedback">
+                                        El campo no puede estar en blanco.
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="input-group has-validation">
+                                    <input type="text" class="form-control ValidacionCorreo" placeholder="Correo" id="txtPresentarCorreo" aria-describedby="inputGroupPrepend">
+                                    <div id="validacionNombre" class="invalid-feedback">
+                                        El campo no puede estar en blanco.
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="input-group has-validation">
+                                    <input type="text" class="form-control ValidacionTelefono" placeholder="Telefono" id="txtPresentarTelefono" aria-describedby="inputGroupPrepend">
+                                    <div id="ValidationTelefono" class="invalid-feedback">
+                                        El numero debe ser de 10 digitos
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="row">
+                        <div class="col-1 text-center">
+                            <a id="LupaProducto"
+                               class="nav-link align-middle px-0 align-middle" data-bs-toggle="modal"
+                               data-bs-target="#ModalProducto">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                        aria-expanded="false" aria-controls="collapseTwo">
+                                    Seleccione Producto
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body row border-top" id="lstPro">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row paddTotal ">
+        <div class="col-12 p-1 border bg-light rounded border  ">
+
+
+            <div class="row list-group-item ">
+                <div class=" col-3">
+                    <h6>SubTotal:</h6>
+                </div>
+                <div class="col" id="subtotal">
+                </div>
+            </div>
+
+            <div class="row list-group-item ">
+                <div class="col-3">
+                    <h6>Total Descuento:</h6>
+                </div>
+                <div class="col" id="TotalDescuento">
+                </div>
+            </div>
+            <div class="row list-group-item ">
+
+                <div class="row col-3 form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitch"
+                           onclick="flexSwitch">
+                    <h6>Iva:</h6>
+                </div>
+                <div class="col" id="Iva">
+                </div>
+            </div>
+            <div class="row list-group-item ">
+                <div class="col-3">
+                    <h6>Total:</h6>
+                </div>
+                <div class="col" data-value="valor" id="Total">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="spinner-border text-primary" id="Spinner" role="status">
+    <span class="sr-only">Loading...</span>
+</div>
+
+
+
+
+<br />
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-3 text-center">
+        <a asp-controller="Factura" asp-action="Factura" id="btnNuevaFactura"
+           class="btn btn-primary text-white w-100 mt-4 fw-semibold shadow-sm">Nueva</a>
+    </div>
+    <div class="col-3 text-center"><a id="btnGenerarFactura" class="btn btn-primary text-white w-100 mt-4 fw-semibold shadow-sm">Facturar</a></div>
+    <div class="col-3"></div>
+</div>
+
+@* Modal Cliente*@
+<div class="modal fade" id="ModalCliente" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row ">
+                    <div class="col input-group has-validation">
+                        <input type="text" class="form-control" placeholder="Identificacion" aria-label="IdCliente" value="" name="IdCliente" id="txtBuscarCliente">
+                        <div id="validacionClienteBlanco" class="invalid-feedback">
+                            El  campo no puede estar en blanco
+                        </div>
+                        <div id="validacionClienteExiste" class="invalid-feedback">
+                            No existe el cliente
+                        </div>
+                    </div>
+                    <div class="col-1 text-center"><a id="btnSeleccionarCliente" class="nav-link px-0 align-middle"><i class="fa-solid fa-magnifying-glass"></i></a></div>
+                </div>
+                <br />
+
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modal validacion campos vacios*@
+<div class="modal fade" id="modalCamposVacios" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <svg class="bi flex-shrink-0 me-2 text-danger " width="50" height="50" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                </div>
+                <div class=" row alert  justify-content-center" role="alert">
+                    <div class="col-auto">
+                        <h5>
+                            LLenar todos los campos
+                        </h5>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ok</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*stock producto*@
+<div class="modal" tabindex="-1" id="ModalStok">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <svg class="bi flex-shrink-0 me-2 text-warning" width="50" height="50" role="img" aria-label="warning:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                </div>
+                <div class=" row alert  justify-content-center" role="alert">
+                    <div class="col-auto">
+                        <h5>
+                            @objAccesor.HttpContext.Session.GetString("MensajeFactura")
+                        </h5>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*Modal Factura Hecha*@
+
+
+
+<div class="modal" tabindex="-1" id="modalFactura">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+
+            <div class="modal-body">
+                <div class="row alert-success d-flex align-items-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="50" height="50" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+
+                </div>
+                <div class=" row alert justify-content-center" role="alert">
+                    <div class="col-auto">
+                        <h5>
+                            @objAccesor.HttpContext.Session.GetString("MensajeFactura")
+                        </h5>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-primary" data-bs-dismiss="modal" asp-controller="Factura" asp-action="Factura">OK</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal Producto*@
+<div class="modal fade" id="ModalProducto" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Productos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col input-group has-validation">
+                        <input type="text" class="form-control" placeholder="Nemonico" value="" id="txtBuscarNemonico">
+                        <div id="validacionProductoBlanco" class="invalid-feedback">
+                            El  campo no puede estar en blanco
+                        </div>
+                        <div id="validacionProductoExiste" class="invalid-feedback">
+                            No existe el procucto
+                        </div>
+                        <div id="validacionProductoSeleccionado" class="invalid-feedback">
+                            El producto ya fue seleccionado
+                        </div>
+                    </div>
+                    <div class="col-1 text-center"><a id="btnBuscarProducto" class="nav-link px-0 align-middle " data-bs-toggle="modal" data-bs-target="#"><i class="fa-solid fa-magnifying-glass"></i></a></div>
+                </div>
+                <br />
+                <div class="list-group" id="lstProducto">
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*Modal stok no existente *@
+
+
+
+<div class="modal" tabindex="-1" id="StokExisten">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+
+            <div class="modal-body">
+                <div class="row alert-success d-flex align-items-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="50" height="50" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+
+                </div>
+                <div class=" row alert justify-content-center" role="alert">
+                    <div class="col-auto">
+                        <h5>
+                            El Stok no es suficiente
+                        </h5>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" asp-controller="Factura" asp-action="Factura">OK</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts
+    {
+    <script>
+        $(function MyFunction() {
+
+            $("#Nombre").html("Selecciones Cliente");
+            var jsonCliente = null;
+            var jsonProducto = null;
+            let arregloDetalle = [];
+            var subTotal = 0;
+            var Iva = 0;
+            var Total = 0;
+            var TotalDes = 0;
+            var DescuentoAplicado = 0;
+            var TotalTotal = 0;
+            var AplicaIva = "";
+            var DetalleFactura = [];
+            var CodigoFactura = 0;
+            var Identificacion = '';
+            $("#Spinner").hide();
+            $("#LupaCliente").click(function () {
+
+                $("#Nombre").html("Selecciones Cliente");
+                $("#validacionClienteExiste").hide();
+
+            });
+            $("#LupaProducto").click(function () {
+                $("#validacionProductoBlanco").hide();
+                $("#validacionProductoExiste").hide();
+            });
+            var myModalCliente = new bootstrap.Modal(document.getElementById("ModalCliente"), {});
+            $("#btnSeleccionarCliente").click(function () {
+                var strValorCliente = $("#txtBuscarCliente").val();
+
+                var jsonCliente = 0;
+
+                if (strValorCliente.length < 9) {
+
+                    $("#validacionClienteBlanco").show();
+
+                } else {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "ObtenerIdentificacionApellidoNombre",
+                        dataType: "json",
+                        data: { strIdentificacion: strValorCliente },
+                        success: function (response) {
+                            jsonCliente = response.value;
+                            console.log(response.value.apellido1);
+
+                            if (response.value.idCliente == 0) {
+                                $("#txtBuscarCliente").val('');
+                                $("#validacionClienteExiste").show();
+
+                            } else {
+                                $("#txtBuscarCliente").val('');
+                                $("#txtIdCliente").val(response.value.idCliente);
+                                $("#txtPresentarIdentificacion").val(response.value.identificacion);
+                                $("#strTipoIdentificacion option[value=" + response.value.tipoIdentificacion + "]").attr("selected", true);
+
+                                $("#txtPresentarNombre").val(response.value.nombre1);
+                                $("#txtPresentarApellido").val(response.value.apellido1);
+                                $("#txtPresentarCorreo").val(response.value.correo);
+                                $("#txtPresentarTelefono").val(response.value.telefono);
+                                Identificacion = '<p>' + response.value.identificacion + ' - ' + response.value.apellido1 + '  ' + response.value.nombre1 + '<p>';
+                                $("#Nombre").html(Identificacion);
+                                myModalCliente.hide();
+
+                            }
+
+
+                        },
+                        error: function (req, status, error) {
+
+                        }
+                    });
+                }
+
+
+
+
+            });
+
+
+
+            $("#btnBuscarProducto").click(function () {
+                $("#validacionProductoSeleccionado").hide();
+                var strValorProducto = $("#txtBuscarNemonico").val();
+                $("#validacionProductoBlanco").hide();
+                $("#validacionProductoExiste").hide();
+
+                if (strValorProducto == '') {
+                    $("#validacionProductoBlanco").show();
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "ObtenerNemonicoDescripcion",
+                        dataType: "json",
+                        data: { strDescripcion: strValorProducto },
+
+                        success: function (response) {
+                            var descuento = 0;
+                            var contenido = '';
+                            var DescuentoProducto = 0;
+
+                            jsonProducto = response.value.idProducto;
+
+                            $("#lstProducto").html("");
+
+
+                            $.each(response.value, function (index, value) {
+
+                                if (value == 0 || value.estado == 1) {
+                                    $("#validacionProductoExiste").show();
+                                    $("#txtBuscarNemonico").val('');
+                                }else{
+                                    if (value.porcentajeDescuento == 0) {
+
+                                        contenido += '<a id = "' + value.idProducto + '"  porcentajeDescuento="' + value.porcentajeDescuento + '" descuentoAplicado="' + descuento + '" Stok="' + value.stok + '" class=" list-group-item list-group-item-action producto "  value="' + value.precioUnitario + '" name="' + value.descripcion + '"> <div class="row"> <div  class="col-6">' + value.descripcion + '</div> <div class="col-2"> <span class="badge bg-primary rounded-pill">' + value.precioUnitario + "$" + '</span> </div> <div class="col-2"> <span class="badge bg-primary rounded-pill">' + value.porcentajeDescuento + "%" + '</span> </div> <div class="col-1"> <span class="badge bg-primary rounded-pill">' + descuento + "$" + '</span> </div> </div> </a>';
+
+                                    } else {
+                                        DescuentoProducto = (value.precioUnitario * (value.porcentajeDescuento * 0.01));
+                                        descuento = value.precioUnitario - (value.precioUnitario * (value.porcentajeDescuento * 0.01));
+                                        contenido += '<a id = "' + value.idProducto + '" porcentajeDescuento="' + value.porcentajeDescuento + '" descuentoAplicado="' + descuento + '" Stok="' + value.stok + '" descuentoProducto="' + DescuentoProducto + '" class=" list-group-item list-group-item-action producto "  value="' + value.precioUnitario + '" name="' + value.descripcion + '"> <div class="row"> <div  class="col-6">' + value.descripcion + '</div> <div class="col-2"> <span class="badge bg-primary rounded-pill">' + value.precioUnitario + "$" + '</span> </div> <div class="col-2"> <span class="badge bg-primary rounded-pill">' + value.porcentajeDescuento + "%" + '</span> </div> <div class="col-1"> <span class="badge bg-primary rounded-pill">' + descuento + "$" + '</span> </div> </div> </a>';
+                                    }
+                                }
+                            });
+
+
+                            $("#lstProducto").html(contenido);
+                            //$("#DescuentoApp").html(descuento);
+                        },
+                        error: function (req, status, error) {
+
+                        }
+                    });
+                }
+
+
+            });
+
+            var contenido2 = '';
+
+            $(document).on("click", "a.producto", function () {
+                var Producto = false;
+
+                var DescuentoProducto = $(this).attr("descuentoProducto");
+                var PorcentajeDescuento = $(this).attr("porcentajeDescuento");
+                var DescuentoAplicado = $(this).attr("descuentoAplicado");
+                var Stok = $(this).attr("Stok");
+                var intId = $(this).attr("id");
+                var descripcion = $(this).attr("name");
+                var precio = $(this).attr("value");
+                contenido2 = '';
+                var sub = '';
+                var intAlmacenaId = 0;
+
+                $("#lstPro").html("");
+                $("#subtotal").html("");
+                if (isNaN(DescuentoProducto)) {
+                    DescuentoProducto = 0;
+                }
+                var ProductoExiste = 0;
+                arregloDetalle.forEach((detalle) => {
+                    if (detalle.id == intId) {
+                        $("#validacionProductoSeleccionado").show();
+                        $("#txtBuscarNemonico").val('');
+                        ProductoExiste = 1;
+                    }
+                });
+
+                if (ProductoExiste == 0) {
+                    $(this).hide();
+                    const odjDetalle = {
+                        id: intId,
+                        descrip: descripcion,
+                        prec: precio,
+                        PorDescuento: PorcentajeDescuento,
+                        DescuentoApl: DescuentoAplicado,
+                        DesProducto: DescuentoProducto,
+                        Stok: Stok,
+                    };
+                    arregloDetalle.push(odjDetalle);
+                    
+                }
+
+                TotalDes = 0;
+                subTotal = 0;
+
+                arregloDetalle.forEach((detalle) => {
+
+                    subTotal = parseFloat(detalle.prec) + subTotal;
+                    TotalDes = parseFloat(detalle.DesProducto) + TotalDes;
+
+                    if (detalle.PorDescuento == 0) {
+                        contenido2 += '<div class=" list-group-item  " id="Eli' + detalle.id + '">  <div  class="row "> <div id = "' + detalle.id + '" name="ProductoEnviar" class="col-2 permiso ">' + detalle.descrip + '</div> <div  class="col-1 text-muted  "> <p class="" >  P.U</p> </div> <div class="col-1 "> <span class="badge padd bg-primary rounded-pill">' + detalle.prec + " $" + '</span> </div>  <div class="col-1   text-muted"> <p >Des</p> </div> <div class="col-1"> <span class="badge bg-primary rounded-pill">' + detalle.PorDescuento + " %" + '</span> </div> <div class=" col-2 text-muted"> <p> Des.Total</p> </div> <div class="col-1 "> <span class="badge bg-primary rounded-pill">' + detalle.prec + " $" + '</span> </div> <div class = "col-2"> <input class="form-control bg-light cantidad" Descuento = "' + detalle.PorDescuento + '" PrecioUnitario = "' + detalle.prec + '" PrecioP = "' + detalle.prec + '"   idInput = "' + detalle.id + '" stok = "' + detalle.Stok + '"  id="Input' + detalle.id + '" value="1"  oninput="MyFunction()"/></div><div class="col-1"><a class="nav-link px-0 align-middle eliminar" idEliminar="' + detalle.id + '" precio="' + detalle.prec + '" subTotal="' + detalle.prec + '" descuento = "' + detalle.PorDescuento + '" > <i class="fa-solid fa-xmark"></i></a> </div></div> </div > ';
+                        obj = {
+                            "IdProducto": detalle.id,
+                            "Cantidad": 1,
+                        };
+
+                        DetalleFactura.push(obj);
+                    } else {
+                        contenido2 += '<div class=" list-group-item  " id="Eli' + detalle.id + '">  <div  class="row "> <div id = "' + detalle.id + '" name="ProductoEnviar" class="col-2 permiso ">' + detalle.descrip + '</div> <div  class="col-1 text-muted  "> <p class="" >  P.U</p> </div> <div class="col-1 "> <span class="badge padd bg-primary rounded-pill">' + detalle.prec + " $" + '</span> </div>  <div class="col-1   text-muted"> <p >Des</p> </div> <div class="col-1"> <span class="badge bg-primary rounded-pill">' + detalle.PorDescuento + " %" + '</span> </div> <div class=" col-2 text-muted"> <p> Des.Total</p> </div> <div class="col-1 "> <span class="badge bg-primary rounded-pill">' + detalle.DescuentoApl + " $" + '</span> </div> <div class = "col-2"> <input class="form-control bg-light cantidad" Descuento = "' + detalle.PorDescuento + '" PrecioUnitario = "' + detalle.prec + '"  PrecioP = "' + detalle.DescuentoApl + '" idInput = "' + detalle.id + '" stok = "' + detalle.Stok + '" id="Input' + detalle.id + '" value="1"  oninput="MyFunction()"/></div><div class="col-1"><a class="nav-link px-0 align-middle eliminar" idEliminar="' + detalle.id + '" precio="' + detalle.DescuentoApl + '" subTotal="' + detalle.prec + '" descuento = "' + detalle.PorDescuento + '" > <i class="fa-solid fa-xmark"></i></a> </div></div> </div > ';
+                        obj = {
+                            "IdProducto": detalle.id,
+                            "Cantidad": 1,
+                        };
+
+                        DetalleFactura.push(obj);
+                    }
+                });
+                obj = null;
+
+
+                $("#lstPro").html(contenido2);
+                DescuentoAplicado = subTotal - TotalDes;
+                Iva = DescuentoAplicado * 0.12;
+                TotalTotal = subTotal + Iva - TotalDes;
+                TotalTotal = Number(TotalTotal.toFixed(2));
+                Total = subTotal - TotalDes;
+                Total = Number(Total.toFixed(2));
+                Iva = Number(Iva.toFixed(2));
+                $("#TotalDescuento").html(TotalDes);
+                $("#Total").html(Total);
+                $("#subtotal").html(subTotal);
+
+            });
+
+            $(document).on("click", "a.eliminar", function () {
+                var PorcentajeDescuento = $(this).attr("descuento");
+                var Id = $(this).attr("idEliminar");
+                var Precio = $(this).attr("precio");
+                var SubTot = $(this).attr("subTotal");
+                var IvaEli = 0;
+                var Descuento = 0;
+                var SubTotalEliminado = 0;
+                var DescuentoEliminado = 0;
+                var TotalEliminado = 0;
+                var IvaProducto = 0;
+                var IvaEliminado = 0;
+                var TotalconIvaEliminado = 0;
+                var Canditad = $("#Input" + Id).val();
+                var Total = document.getElementById("Total").innerHTML;
+                var SubTotal = document.getElementById("subtotal").innerHTML;
+                var TotalDescuento = document.getElementById("TotalDescuento").innerHTML;
+                var TotalIva = document.getElementById("Iva").innerHTML;
+
+                IvaProducto = Precio * 0.12;
+                
+                IvaEliminado = parseFloat(TotalIva) - (IvaProducto * Canditad);
+                Descuento = parseFloat(SubTot) * PorcentajeDescuento * 0.01 * Canditad;
+                DescuentoEliminado = parseFloat(TotalDescuento) - Descuento;
+                SubTotalEliminado = parseFloat(SubTotal) - (SubTot * Canditad);
+                TotalEliminado = parseFloat(Total) - (Precio * Canditad);
+                TotalconIvaEliminado = parseFloat(Total) - (IvaProducto * Canditad) - (Precio * Canditad);
+                console.log("iva" + IvaProducto);
+
+                contenido2 = '';
+                if (miCheckbox.checked) {
+                    IvaEliminado = Number(IvaEliminado.toFixed(2));
+                    SubTotalEliminado = Number(SubTotalEliminado.toFixed(2));
+                    TotalconIvaEliminado = Number(TotalconIvaEliminado.toFixed(2));
+                    DescuentoEliminado = Number(DescuentoEliminado.toFixed(2));
+                    
+                    $("#Iva").html(IvaEliminado + ' $');
+                    $("#subtotal").html(SubTotalEliminado + ' $');
+                    $("#Total").html(TotalconIvaEliminado + ' $');
+                    $("#TotalDescuento").html(DescuentoEliminado + ' $');
+                } else {
+                    SubTotalEliminado = Number(SubTotalEliminado.toFixed(2));
+                    TotalEliminado = Number(TotalEliminado.toFixed(2));
+                    DescuentoEliminado = Number(DescuentoEliminado.toFixed(2));
+                    $("#subtotal").html(SubTotalEliminado + ' $');
+                    $("#Total").html(TotalEliminado + ' $');
+                    $("#TotalDescuento").html(DescuentoEliminado + ' $');
+                }
+                $("#Eli" + Id).html("");
+                //$().hide();
+
+                const productoEliminar = Id;
+                const index = arregloDetalle.findIndex(x => x.id === productoEliminar);
+                arregloDetalle.splice(index, 1);
+                const index1 = DetalleFactura.findIndex(x => x.id === productoEliminar);
+                DetalleFactura.splice(index1, 1);
+
+            });
+
+            var StokExisten = new bootstrap.Modal(document.getElementById("StokExisten"), {});
+            var detallenu = [];
+            $(document).on("change", "input.cantidad", function () {
+
+                DetalleFactura = [];
+                var totalcan = 0;
+                var PrecioUTotal = 0;
+                var TotalDescuento = 0;
+                var Iva = 0
+                var TotalIva = 0;
+                $("input.cantidad").each(function () {
+                    var stok = $(this).attr("stok");
+                    var Precio = $(this).attr("PrecioP");
+                    var IdProductofo = $(this).attr("idInput");
+                    var PrecioU = $(this).attr("PrecioUnitario");
+                    var Descuento = $(this).attr("Descuento");
+                    var Cantidad = $(this).val();
+                    detallenu.push(totalcan);
+                    console.log(DetalleFactura);
+                    if (Cantidad == '') {
+                        alert('Llenar todos los input');
+                    } else {
+                        if (stok < parseFloat(Cantidad)) {
+                            StokExisten.show();
+                            $(this).val('1');
+
+                        } else {
+                            PrecioUTotal = (parseFloat(PrecioU) * Cantidad) + PrecioUTotal;
+                            totalcan = (parseFloat(Precio) * Cantidad) + totalcan;
+                            TotalDescuento = PrecioUTotal - totalcan;
+                            if (miCheckbox.checked) {
+                                
+                                Iva = totalcan * 0.12;
+                                TotalIva = totalcan + Iva;
+                            }
+                        }
+                    }
+                    if (miCheckbox.checked) {
+                        Iva = Number(Iva.toFixed(2));
+                        PrecioUTotal = Number(PrecioUTotal.toFixed(2));
+                        TotalIva = Number(TotalIva.toFixed(2));
+                        TotalDescuento = Number(TotalDescuento.toFixed(2));
+                        $("#Iva").html(Iva);
+                        $("#subtotal").html(PrecioUTotal);
+                        $("#Total").html(TotalIva);
+                        $("#TotalDescuento").html(TotalDescuento)
+                    } else {
+
+                        PrecioUTotal = Number(PrecioUTotal.toFixed(2));
+                        totalcan = Number(totalcan.toFixed(2));
+                        TotalDescuento = Number(TotalDescuento.toFixed(2));
+
+                        $("#subtotal").html(PrecioUTotal);
+                        $("#Total").html(totalcan);
+                        $("#TotalDescuento").html(TotalDescuento);
+                    }
+                    obj = {
+                        "IdProducto": IdProductofo,
+                        "Cantidad": Cantidad,
+                    };
+                    //const productoEliminar = IdProductofo;
+                    //const index = arregloDetalle.findIndex(x => x.IdProducto === productoEliminar);
+
+                    //arregloDetalle.splice(index, 1);
+
+                    DetalleFactura.push(obj);
+                    console.log(DetalleFactura);
+                });
+
+
+            });
+
+            /////validaciones cliente
+            $(document).on("change", "input.ValidacionIdentificacion", function () {
+                var TipoIde = $("#strTipoIdentificacion").val();
+                
+                var Cantidad = $(this).val();
+                if(TipoIde == 05){
+                    if (Cantidad.length < 10 || Cantidad.length > 10) {
+                        $("#validationIdentificacionCedula").show();
+                    } else {
+                        $("#validationIdentificacionCedula").hide();
+                    }
+                } else if (TipoIde == 04) {
+                    if (Cantidad.length < 13 || Cantidad.length > 13) {
+                        $("#validationIdentificacionRuc").show();
+                    } else {
+                        $("#validationIdentificacionRuc").hide();
+                    }
+                }
+                
+
+            });
+
+
+            $(document).on("change", "input.ValidacionNombre", function () {
+                
+                var Cantidad = $(this).val();
+                if (Cantidad == 0) {
+                    $("#ValidationNombre").show();
+                } else {
+                    $("#ValidationNombre").hide();
+                }
+
+            });
+            $(document).on("change", "input.ValidacionApellido", function () {
+
+                var Cantidad = $(this).val();
+                if (Cantidad == 0) {
+                    $("#ValidationApellido").show();
+                } else {
+                    $("#ValidationApellido").hide();
+                }
+
+            });
+
+
+            $(document).on("change", "input.ValidacionCorreo", function () {
+
+                var Cantidad = $(this).val();
+                //let valCorreo = '/^\w+([\.-]?\w+)*\w+([\.-]?\w+)*(\.\w{2,3})+$/';
+
+                if (valCorreo.test(Cantidad)) {
+                    $("#ValidationCorreo").show();
+                } else {
+                    $("#ValidationCorreo").hide();
+                }
+
+            });
+            $(document).on("change", "input.ValidacionTelefono", function () {
+
+                var Cantidad = $(this).val();
+
+
+                if (Cantidad.length < 9) {
+                    $("#ValidationTelefono").show();
+                } else {
+                    $("#ValidationTelefono").hide();
+                }
+
+            });
+            var miCheckbox = document.getElementById('flexSwitch');
+            miCheckbox.addEventListener('click', function () {
+
+                var totalcan = 0;
+                var PrecioUTotal = 0;
+                var TotalDescuento = 0;
+                var Iva = 0
+                var TotalIva = 0;
+                $("input.cantidad").each(function () {
+                    var stok = $(this).attr("stok");
+                    var Precio = $(this).attr("PrecioP");
+                    var IdProductofo = $(this).attr("id");
+                    var PrecioU = $(this).attr("PrecioUnitario");
+                    var Descuento = $(this).attr("Descuento");
+                    var Cantidad = $(this).val();
+                    detallenu.push(totalcan);
+                    
+                    if (Cantidad == '') {
+                        alert('Llenar todos los input');
+                    } else {
+                        if (stok < parseFloat(Cantidad)) {
+                            StokExisten.show();
+                            $(this).val('1');
+
+                        } else {
+                            PrecioUTotal = (parseFloat(PrecioU) * Cantidad) + PrecioUTotal;
+                            totalcan = (parseFloat(Precio) * Cantidad) + totalcan;
+                            TotalDescuento = PrecioUTotal - totalcan;
+                            if (miCheckbox.checked) {
+                                
+                                Iva = totalcan * 0.12;
+                                TotalIva = totalcan + Iva;
+                            }
+                        }
+                    }
+                });
+
+
+                if (miCheckbox.checked) {
+
+                    TotalIva = Number(TotalIva.toFixed(2));
+                    Iva = Number(Iva.toFixed(2));
+                    AplicaIva = "True";
+                    $("#Total").html(TotalIva);
+                    $("#Iva").html(Iva);
+
+                } else {
+                    totalcan = Number(totalcan.toFixed(2));
+                    PrecioUTotal = Number(PrecioUTotal.toFixed(2));
+
+                    AplicaIva = "False"
+                    $("#Total").html(totalcan);
+                    $("#Iva").html('');
+                    $("#subtotal").html(PrecioUTotal);
+                }
+            });
+
+
+            $("#btnNuevaFactura").click(function () {
+                $("#lstPro").html("");
+                $("#txtIdCliente").val('');
+                $("#txtPresentarIdentificacion").val('');
+                $("#txtPresentarNombre").val('');
+                $("#txtPresentarApellido").val('');
+                $("#txtPresentarCorreo").val('');
+                $("#txtPresentarTelefono").val('');
+                $("#TotalDescuento").html("");
+                $("#subtotal").html("");
+                $("#Total").html("");
+                $("#Iva").html("");
+                subTotal = 0;
+
+            });
+
+            $("#btnGenerarFactura").click(function () {
+
+                
+                var txtIdCliente = $("#txtIdCliente").val();
+                var TipoIdentificacion = $("#strTipoIdentificacion").val();
+                var txtIdentificacion = $("#txtPresentarIdentificacion").val();
+                var txtPresentarNombre = $("#txtPresentarNombre").val();
+                var txtPresentarApellido = $("#txtPresentarApellido").val();
+                var txtPresentarCorreo = $("#txtPresentarCorreo").val();
+                var txtPresentarTelefono = $("#txtPresentarTelefono").val();
+                var Cliente = {
+                    "IdCliente": String(txtIdCliente),
+                    "TipoIdentificacion": String(TipoIdentificacion),
+                    "Identificacion": String(txtIdentificacion),
+                    "Nombre1": String(txtPresentarNombre),
+                    "Apellido1": String(txtPresentarApellido),
+                    "Correo": String(txtPresentarCorreo),
+                    "Telefono": String(txtPresentarTelefono),
+                }
+
+
+                var myModalFactura = new bootstrap.Modal(document.getElementById("modalFactura"), {});
+                var myModalCamposVacios = new bootstrap.Modal(document.getElementById("modalCamposVacios"), {});
+                var ModalStok = new bootstrap.Modal(document.getElementById("ModalStok"), {});
+                if (txtIdCliente == "" || subTotal == 0 || txtIdentificacion < 9 || txtPresentarNombre == "" || txtPresentarApellido == "") {
+                    myModalCamposVacios.show();
+
+                    ///encerar el subtotal total e iva
+
+
+                } else {
+                    $("#Spinner").show();
+                    $.ajax({
+                        type: "POST",
+                        url: "Guardar",
+                        data:
+                            { Cliente: Cliente, DetalleFactura: DetalleFactura, AplicaIva: AplicaIva },
+                        dataType: "json",
+                        success: function (data) {
+                            console.log(data);
+                            CodigoFactura = data.value.codigo;
+                            
+                            if (CodigoFactura == 1) {
+                                $("#Spinner").hide();
+                                myModalFactura.show();
+                                $("#Spinner").hide();
+                                $("#lstPro").html("");
+                                $("#txtIdCliente").val('');
+                                $("#txtPresentarIdentificacion").val('');
+                                $("#txtPresentarNombre").val('');
+                                $("#txtPresentarApellido").val('');
+                                $("#txtPresentarCorreo").val('');
+                                $("#txtPresentarTelefono").val('');
+                                $("#TotalDescuento").html("");
+                                $("#subtotal").html("");
+                                $("#Total").html("");
+                                $("#Iva").html("");
+                                subTotal = 0;
+                                $("#Nombre").html("Selecciones Cliente");
+                            } else {
+                                $("#Spinner").hide();
+                                
+                                $("#Spinner").hide();
+                                $("#lstPro").html("");
+                                $("#txtIdCliente").val('');
+                                $("#txtPresentarIdentificacion").val('');
+                                $("#txtPresentarNombre").val('');
+                                $("#txtPresentarApellido").val('');
+                                $("#txtPresentarCorreo").val('');
+                                $("#txtPresentarTelefono").val('');
+                                $("#TotalDescuento").html("");
+                                $("#subtotal").html("");
+                                $("#Total").html("");
+                                $("#Iva").html("");
+                                subTotal = 0;
+                                $("#Nombre").html("Selecciones Cliente");
+                            }
+
+
+                        },
+                        error: function (request, status, errorThrown) {
+                            alert(status);
+                        }
+                    });
+                }
+
+
+
+
+
+
+            });
+
+
+        });
+    </script>
+    }
+
+
+
+
+
+
+
+

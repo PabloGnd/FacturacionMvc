@@ -1,0 +1,51 @@
+﻿.paddFactura {
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.paddTotal {
+    padding-left: 40%;
+    padding-right: 40%;
+}
+.pUnitario {
+    font-size: large;
+}
+.divEsconder {
+    display: none;
+}
+
+@media only screen and (max-width: 950px) {
+    .paddFactura {
+        padding-left: 0px;
+        padding-right: 0rem;
+    }
+    .pUnitario {
+        font-size: smaller;
+    }
+    .paddTotal {
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+    
+}
+
+@media only screen and (max-width: 600px) {
+    
+    .paddTotal {
+        padding-left: 15%;
+        padding-right: 15%;
+    }
+    .divEsconder {
+        display:block;
+    }
+    .pUnitario {
+        font-size: smaller;
+    }
+    .divDescuentos {
+        display: none;
+    }
+    .padd {
+        padding-left: 15%;
+        padding-right: 15%;
+    }
+}

@@ -1,0 +1,24 @@
+﻿@model List<Producto> 
+
+@foreach (var item in Model)
+{              
+               
+                
+                 
+                    <div class="col-1 text-right">
+                      
+                    </div>
+                    <div class="col-6 justify-content-center">
+                      <h6 class="small">@item.Nemonico - @item.Descripcion</h6>
+                      <h6 class="small">@item.PrecioUnitario $</h6>
+                    </div>
+                    <div class="col-1 text-right">
+                      <input class="form-check-input" type="checkbox" id="hola" value="hola" name="input">
+                    </div>
+                    
+                
+                
+                
+                
+                }
+               

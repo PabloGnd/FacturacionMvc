@@ -1,0 +1,352 @@
+﻿@model List<VMEstablecimiento>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <div class="text-center">
+        <h4>Consulta de facturas</h4>
+    </div>
+
+</div>
+<br />
+@foreach (var item1 in Model)
+{
+
+    
+       
+
+            <div class="row paddConsultaFactura">
+
+                <div class="accordion col-12" id="accordionExample">
+                    <div class="accordion-item">
+                        <div class="row codigoBarras ">
+                            <div class="col-1"><a id="IdFactura" class="nav-link px-0 align-middle producto "><i class="fa-solid fa-barcode"></i></a></div>
+
+                            <div class="col">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <div class="row">
+                                            <div class="col-4"><h6 class="small">@item1.CodigoEstablecimiento </h6></div>
+                                            <div class="col-8"><h6 class="small">@item1.Descripcion</h6></div>
+                                        </div>
+                                    </button>
+                                </h2>
+                            </div>
+                            <div class="col-1 "><a class="nav-link px-0 align-middle" data-bs-toggle="modal" data-bs-target="#AgregarSucursal_@item1.IdEstablecimiento"><i class="fa-solid fa-plus"></i></a></div>
+                            <div class="col-1 "><a class="nav-link px-0 align-middle" data-bs-toggle="modal" data-bs-target="#Modal_@item1.IdEstablecimiento"><i class="fa-solid fa-pen"></i></a></div>
+                        </div>
+                        <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                             
+                            <div class="row accordion-body">
+                            @if (item1.lstVMSucursal == null)
+                            {
+                                <div class="row text-center">
+                                    <div class="col-6" id=""><h6 class="small"></h6>No Tiene Sucursales</div>
+                                
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var item2 in item1.lstVMSucursal)
+                                {
+                                    <div class="row text-center">
+                                        <div class="col-6" id=""><h6 class="small"></h6>@item2.CodigoSucursal</div>
+                                        <div class="col  p-1"><a class="nav-link px-0 align-middle" data-bs-toggle="modal" data-bs-target="#Modal_@item2.IdSucursal"><i class="fa-solid fa-pen"></i></a></div>
+                                        <div class="col  p-1"><a class="nav-link px-0 align-middle consulta" data-bs-toggle="modal" IdSucursal="@item2.IdSucursal" data-bs-target="#ModalUsuarios_@item2.IdSucursal"><i class="fa-solid fa-user"></i></a></div>
+
+                                    </div>
+                                    @*modal Editar Sucursal*@
+                                    <form id="FrmEditar" asp-action="GuardarSucursal" asp-controller="Establecimiento" method="post">
+                                        <div class="modal fade" id="Modal_@item2.IdSucursal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="staticBackdropLabel">Usuario</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <input type="text" class="form-control" placeholder="IdUsuario" aria-label="" value="@item2.IdSucursal" name="IdSucursal" readonly>
+
+                                                        <input type="text" class="form-control" placeholder="IdUsuario" aria-label="" value="@item2.IdEstablecimiento" name="IdEstablecimiento" readonly>
+
+                                                        <label class="form-label">Codigo</label>
+
+                                                        <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nombre" aria-label="Nombres" value="@item2.CodigoSucursal" name="CodigoSucursal" id="validationNombre" aria-describedby="inputGroupPrepend">
+
+
+
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                                                        <button type="submit" class="btn btn-primary ">Guardar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+
+
+
+                                @*@*modal editar Usuarios*@
+
+                                <div class="modal fade" id="ModalUsuarios_@item2.IdSucursal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="staticBackdropLabel">Usuario</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="lstPermisos_@item2.IdSucursal"></div>
+
+
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                                                <button type="button" class="btn btn-primary Guardar" id="" asp-controller="Usuario" asp-action="Lista" data-bs-dismiss="modal">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                            }
+                            
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            
+
+        
+
+        @*modal Nueva Sucursal*@
+        <form id="FrmEditar" asp-action="GuardarSucursal" asp-controller="Establecimiento" method="post">
+            <div class="modal fade" id="AgregarSucursal_@item1.IdEstablecimiento" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Usuario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <input type="text" class="form-control" placeholder="IdUsuario" aria-label="" value="" name="IdSucursal" readonly>
+
+                            <input type="text" class="form-control" placeholder="IdUsuario" aria-label="" value="@item1.IdEstablecimiento" name="IdEstablecimiento" readonly>
+
+                            <label class="form-label">Codigo</label>
+
+                            <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nombre" aria-label="Nombres" value="" name="CodigoSucursal" id="validationNombre" aria-describedby="inputGroupPrepend">
+
+
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                            <button type="submit" class="btn btn-primary ">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @*modal editar Establecimiento*@
+        <form id="FrmEditar" asp-action="GuardarEstablecimiento" asp-controller="Establecimiento" method="post">
+            <div class="modal fade" id="Modal_@item1.IdEstablecimiento" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Usuario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <input type="text" class="form-control" placeholder="IdUsuario" aria-label="IdUsuario" value="@item1.IdEstablecimiento" name="IdEstablecimiento" readonly>
+
+                            <label class="form-label">Codigo</label>
+
+                            <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nombre" aria-label="Nombres" value="@item1.CodigoEstablecimiento" name="CodigoEstablecimiento" id="validationNombre" aria-describedby="inputGroupPrepend">
+
+                            <label for="validationApellido" class="form-label">Descripcion</label>
+
+                            <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nik Usuario" aria-label="Apellidos" value="@item1.Descripcion" name="Descripcion" id="validationApellido" aria-describedby="inputGroupPrepend">
+
+                            <label for="" class="form-label">Direccion</label>
+
+                            <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Contraseña" aria-label="Apellidos" name="Direccion" value="@item1.Direccion" id="" aria-describedby="inputGroupPrepend">
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                            <button type="submit" class="btn btn-primary ">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+}
+@*Botones Nuevo y buscar*@
+<div class="continer  ">
+
+
+    <div class="col-3 d-grid cmn-divfloat " id="div-totop">
+        <button type="button" href="#span-top" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#ModalNuevo"><i class="fa-solid fa-plus"></i>Nuevo</button>
+    </div>
+    <div class="col-3 d-grid cmn-divfloat1 " id="div-totop">
+        <button class="btn btn-primary" id="LupaProducto"><i class="fa-solid fa-magnifying-glass"></i>Buscar</button>
+    </div>
+
+
+</div>
+@*modal nuevo Establecimiento*@
+<form id="FrmEditar" asp-action="GuardarEstablecimiento" asp-controller="Establecimiento" method="post">
+    <div class="modal fade" id="ModalNuevo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <input type="text" class="form-control" placeholder="IdUsuario" aria-label="IdUsuario" value="" name="IdEstablecimiento" readonly>
+
+                    <label for="" class="form-label">Codigo</label>
+
+                    <input type="text" class="form-control" placeholder="Contraseña" aria-label="Apellidos" name="CodigoEstablecimiento" value="" id="" aria-describedby="inputGroupPrepend">
+
+                    <label class="form-label">Descripcion</label>
+
+                    <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nombre" aria-label="Nombres" value="" name="Descripcion" id="validationNombre" aria-describedby="inputGroupPrepend">
+
+                    <label for="validationApellido" class="form-label">Direccion</label>
+
+                    <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Nik Usuario" aria-label="Apellidos" value="" name="Direccion" id="validationApellido" aria-describedby="inputGroupPrepend">
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts
+    {
+    <script>
+        $(function () {
+            var IdSucursal = '';
+            let Usuarios = [];
+            $(document).on("click", "a.consulta", function () {
+                Usuarios = null;
+                var intIdEmisor = 0;
+                IdSucursal = $(this).attr("IdSucursal");
+                var contenido = '';
+                $("#lstPermisos_" + IdSucursal).html("");
+                $.ajax({
+                    type: "POST",
+                    url: "ListaUsuarios",
+                    dataType: "json",
+                    data: { intIdEmisor: intIdEmisor },
+                    success: function (response) {
+
+                        console.log(response.value);
+                        $.each(response.value, function (index, value) {
+
+                            if ( value.idSucursal == IdSucursal) {
+
+                                contenido += '<div class="form-check"><input class="form-check-input permiso" type = "checkbox"   id = " ' + value.idSucursal + ' " IdUsuario = "' + value.idUsuario + '"  checked ><label class="form-check-label" for= "flexCheckChecked">' + value.nombreUsuario + '</label></div>';
+
+                                
+
+                            } else {
+                                contenido += '<div class="form-check"><input class="form-check-input permiso" type = "checkbox"   id = " ' + value.idSucursal + ' " IdUsuario = "' + value.idUsuario + '" ><label class="form-check-label" for= "flexCheckChecked">' + value.nombreUsuario + '</label></div>';
+
+                                 }
+
+                        });
+
+                        $("#lstPermisos_" + IdSucursal).html(contenido);
+                    },
+                    error: function (req, status, error) {
+                    }
+                });
+
+            });
+
+
+            $(document).on("click", "button.Guardar", function () {
+
+
+
+
+                $("input.permiso").each(function () {
+
+                    
+                    var idUsuario = $(this).attr("IdUsuario");
+                    var miCheckbox = document.getElementById(IdUsuario);
+                    
+
+                    if (miCheckbox.checked) {
+                        obj = {
+
+                            "IdPermisos": IdPermiso,
+                            "IdModulo": IdModulo,
+                            "IdUsuario": IdUsuario,
+                            
+                        };
+
+
+                    } else {
+                        obj = {
+
+                            "IdPermisos": IdPermiso,
+                            "IdModulo": IdModulo,
+                            "IdUsuario": idUsuario,
+                            
+                        };
+
+                    }
+                    
+                    Permisos.push(obj);
+                });
+                Obj = null;
+                console.log(Permisos);
+                $.ajax({
+                    type: "POST",
+                    url: "GuardarPermisos",
+                    data:
+                        { Permisos: Permisos },
+                    dataType: "json",
+                    success: function (data) {
+
+
+                        console.log(data)
+
+                    },
+                    error: function (request, status, errorThrown) {
+                        alert(status);
+                    }
+                });
+            });
+
+        });
+    </script>
+    }

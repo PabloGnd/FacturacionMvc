@@ -1,0 +1,42 @@
+
+
+.cmn-divfloat {
+    position: fixed !important;
+    bottom: 1%;
+    right: 43.5%;
+    display: none;
+}
+
+.cmn-divfloat1 {
+    position: fixed !important;
+    bottom: 1%;
+    right: 15%;
+    display: none;
+}
+
+.paddProducto {
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+@media only screen and (max-width: 600px) {
+    .paddProducto {
+        padding-left: 0px;
+        padding-right: 0rem;
+    }
+
+    .paddProducto-1 {
+        padding-right: 1rem;
+    }
+
+    .icono {
+        display: none;
+    }
+}
+
+@media only screen and (max-width:950px) {
+    .paddProducto {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}

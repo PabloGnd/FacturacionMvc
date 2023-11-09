@@ -1,0 +1,220 @@
+﻿@*@model Registro*@
+@model Emisor
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor objAccesor;
+
+@{
+    ViewData["Title"] = "Registro";
+    Layout = null;
+}
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link href="~/css/site.css" rel="stylesheet" />
+<link href="~/css/ProductoStyle.css" rel="stylesheet" />
+<!-- Alertas signos -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </symbol>
+</svg>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <title>REGISTRO</title>
+</head>
+<body>
+    @if (objAccesor.HttpContext.Session.GetInt32("Error") == 0)
+    {
+        <div class="modal" tabindex="-1" id="exampleModal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <svg class="bi flex-shrink-0 me-2 text-warning" width="50" height="50" role="img" aria-label="warning:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                        </div>
+                        <div class=" row alert  justify-content-center" role="alert">
+                            <div class="col-auto">
+                                <h5>
+                                    @objAccesor.HttpContext.Session.GetString("MensajeError")
+                                </h5>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <form id="FrmRegistro" class="form" asp-action="GuardarCambios" asp-controller="Registro" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault();">
+
+
+
+
+        <h1 class="text-center">Registro</h1>
+        <!-- Progress bar -->
+        <div class="progressbar">
+
+            <div class="progress" id="progress"></div>
+
+            <div class="progress-step progress-step-active"
+                 data-title="Inicio"></div>
+            <div class="progress-step" data-title="Paso 2"></div>
+            <div class="progress-step" data-title="Paso 3"></div>
+            <div class="progress-step" data-title="Paso 4"></div>
+
+        </div>
+        <!-- Steps -->
+        <div class="form-step form-step-active ">
+
+            <div class="input-group">
+                <label for="Ruc">Ruc</label>
+                <input type="text" name="Ruc" id="ruc" require />
+                <div id="validacionRuc" class="invalid-feedback has-validation">
+                    Caracteres de ruc incorrectos
+                </div>
+                <div id="validacion001" class="invalid-feedback has-validation">
+                    Formato de ruc 001 incorrecto
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="RazonSocial">Razon Social</label>
+                <input type="text" name="RazonSocial" id="RazonSocial" onkeyup="mayus(this);" require />
+            </div>
+            <div class="input-group">
+                <label for="NonbreComercial">Nombre Comercial</label>
+                <input type="text" name="NonbreComercial" id="NonbreComercial" onkeyup="mayus(this);" require />
+            </div>
+            <div class="input-group">
+                <label for="DireccionNegocio">Direccion Negocio</label>
+                <input type="text" name="DireccionNegocio" id="DireccionNegocio" onkeyup="mayus(this);" require />
+            </div>
+            <div class="input-group has-validation">
+                <label for="Email">Email</label>
+                <input type="text" name="Email" id="Email" require />
+                <div id="validacionEmail" class="invalid-feedback has-validation">
+                    Formato de e-mail incorrecto
+                </div>
+            </div>
+            <div class="btns-group">
+                <a asp-controller="Registro" asp-action="Login" class="nav-link btn ">Atras</a>
+                <a href="#" id="btn-next" class="btn">Siguiente</a>
+            </div>
+        </div>
+
+
+
+
+        <div class="form-step">
+            <div class="input-group has-validation">
+                <label for="ContribuyenteEspecial">Contribuyente Especial</label>
+                <input type="text" name="ContribuyenteEspecial" id="ContribuyenteEspecial" require />
+                <div id="validacionEspecial" class="invalid-feedback has-validation">
+                    Debe ser caracter numerico
+                </div>
+            </div>
+            <div class="input-group caja">
+                <label for="Contabilidad">Obligado a Llevar Contabilidad  </label>
+                <select name="Contabilidad">
+                    <option>SI</option>
+                    <option selected="selected">NO</option>
+
+                </select>
+            </div>
+            <div class="input-group has-validation">
+                <label for="Archivo">Archivo</label>
+                <input asp-for="ArchivoFile" type="file" />
+            </div>
+
+            <div class="btns-group">
+                <a href="#" class="btn btn-prev" id="btn-prev">Atras</a>
+                <a href="#" id="btn-next1" class="btn btn-next1">Siguiente</a>
+            </div>
+        </div>
+
+
+
+        <div class="form-step">
+            <div class="input-group has-validation">
+                <label for="CodigoEstablecimiento">Codigo de Establecimiento</label>
+                <input type="text" name="CodigoEstablecimiento" id="CodigoEstablecimiento" require />
+                <div id="validacionEstablecimiento" class="invalid-feedback has-validation">
+                    Debe ser caracter numerico
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="NombreEstablecimiento">Nombre del Establecimiento</label>
+                <input type="text" name="NombreEstablecimiento" id="NombreEstablecimiento" onkeyup="mayus(this);" require />
+            </div>
+            <div class="input-group">
+                <label for="DireccionEstablecimiento">Direccion del Establecimiento</label>
+                <input type="text" name="DireccionEstablecimiento" id="DireccionEstablecimiento" onkeyup="mayus(this);" require />
+            </div>
+            <div class="input-group has-validation">
+                <label for="CodigoSucursal">CodigoSucursal</label>
+                <input type="text" name="CodigoSucursal" id="CodigoSucursal" require />
+                <div id="validacionSucursal" class="invalid-feedback has-validation">
+                    Debe ser caracter numerico
+                </div>
+            </div>
+            <div class="btns-group">
+                <a href="#" class="btn btn-prev">Atras</a>
+                <a href="#" id="btn-next2" class="btn btn-next2">Siguiente</a>
+            </div>
+        </div>
+
+
+
+        <div class="form-step">
+            <div class="input-group has-validation">
+                <label for="Nikname">Nombre de Usuario</label>
+                <input type="text" name="Nikname" id="Nikname" onkeyup="mayus(this);" require />
+                <div id="validacionNikname" class="invalid-feedback has-validation">
+                    El nombre de usuario no debe tener espacios ni caracteres especiales.
+                </div>
+            </div>
+            <div class="input-group has-validation">
+                <label for="password">Contraseña</label>
+                <input type="password" name="password" id="password" require />
+                <div id="validacionCaracteres" class="invalid-feedback has-validation">
+                    No debe tener espacios y debe ser mayor a 8 caracteres
+                </div>
+            </div>
+            <div class="input-group has-validation">
+                <label for="confirmPassword">Confirmar Contraseña</label>
+                <input type="password" name="confirmPassword" id="confirmPassword" require />
+                <div id="validacionContracenia" class="invalid-feedback has-validation">
+                    Contraceñas no coinsiden
+                </div>
+            </div>
+            <div class="btns-group">
+                <a href="#" class="btn btn-prev">Atras</a>
+                <button id="btnGuardar" type="submit" class="btn btn-next3">Guardar</button>
+            </div>
+        </div>
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="~/js/Registro.js"></script>
+    <script src="~/js/General.js"></script>
+</body>
+</html>

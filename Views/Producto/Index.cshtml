@@ -1,0 +1,211 @@
+﻿@model List<Producto>
+
+@{
+
+}
+
+<div class="container">
+    <h1 class="text-center">Productos</h1>
+
+    <br />
+
+
+
+    @foreach (var item in Model)
+    {
+        <div class="container ">
+            <div class="row paddProducto">
+
+                <div class="col-14 p-1 border bg-light rounded ">
+                    <div class="row ">
+                        <div class="col-1 icono">
+                            <a class="nav-link px-0 align-middle "><i class="fa-solid fa-city" style="color: #233c67;"></i></a>
+                        </div>
+                        <div class="col-9">
+                            <h6 style="font-size: small">@item.Nemonico-@item.Descripcion </h6>
+                            <div class="row">
+                                <div class="col precio text-muted ">
+                                    <h6 style="font-size: small">@item.PrecioUnitario $</h6>
+                                </div>
+                                <div class="col text-muted ">
+                                    <h6 style="font-size: small">@item.PorcentajeDescuento %</h6>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col p-1"><a class="nav-link px-0 align-middle" data-bs-toggle="modal" data-bs-target="#Eliminar_@item.IdProducto"><i class="fa-solid fa-trash  "></i></a></div>
+                        <div class="col p-1"><a class="nav-link px-0 align-middle" data-bs-toggle="modal" data-bs-target="#Modal_@item.IdProducto"><i class="fa-solid fa-pen"></i></a></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        @*Modal Eliminar*@
+        <div class="modal fade" id="Eliminar_@item.IdProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <svg class="bi flex-shrink-0 me-2 text-danger " width="70" height="70" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                        </div>
+                        <div class="row alert  justify-content-center" role="alert">
+
+                            <div class="col-auto">
+                                <h5>Desea Eliminar el Producto ¿@item.Nemonico-@item.Descripcion?</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <a class="btn btn-primary" asp-action="Eliminar" asp-controller="Producto" asp-route-intIdProducto="@item.IdProducto">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*Modal Editar*@
+        <form asp-action="GuardarCambios" asp-controller="Producto" method="post">
+            <div class="modal fade" id="Modal_@item.IdProducto" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Producto</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+
+                            <input type="text" class="form-control" placeholder="IdProducto" aria-label="IdProducto" value="@item.IdProducto" name="IdProducto" readonly>
+
+                            <label class="form-label">Nemonico</label>
+                            <input type="text" class="form-control" placeholder="Nemonico" aria-label="Nombres" value="@item.Nemonico" name="Nemonico" readonly>
+
+                            <label class="form-label">Descripcion</label>
+                            <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="Descripcion" aria-label="Descripcion" value="@item.Descripcion" name="Descripcion">
+                            <br />
+
+                            <label class="form-label">Precio</label>
+                            <input type="text" class="form-control" placeholder="Precio" aria-label="Precio" value="@item.PrecioUnitario" name="PrecioUnitario">
+
+                            <label class="form-label">Descuento</label>
+                            <input type="text" class="form-control" placeholder="Descuento" aria-label="Descuento" value="@item.PorcentajeDescuento" name="PorcentajeDescuento">
+
+                            <label class="form-label">Stok</label>
+                            <input type="text" class="form-control" placeholder="Stok" aria-label="Stok" value="@item.Stok" name="Stok">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    }
+    @*Botones Nuevo y buscar*@
+    <div class="continer  ">
+
+
+        <div class="col-3 d-grid cmn-divfloat  " id="div-totop">
+            <button type="button" href="#span-top" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#ModalNuevo"><i class="fa-solid fa-plus"></i>Nuevo</button>
+        </div>
+        <div class="col-3 d-grid cmn-divfloat1 " id="div-totop">
+            <button class="btn btn-primary" href="#span-top" data-bs-toggle="modal" data-bs-target="#ModalBuscar"><i class="fa-solid fa-magnifying-glass"></i>Buscar</button>
+        </div>
+
+
+    </div>
+
+
+
+
+
+    @*Modal del buscar*@
+    <form id="FrmBuscarProducto" asp-action="ObtenerNemonicoDescripcion" asp-controller="Producto" method="post" class="row g-3 needs-validation">
+
+        <div class="modal fade" id="ModalBuscar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Buscador</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="NemonicoBuscar" class="form-label">Nemonico</label>
+                        <div class="input-group has-validation">
+                            <input type="text" class="form-control" placeholder="Nemonico" name="Nemonico" id="buscarNemonico" aria-describedby="inputGroupPrepend">
+                            <div id="BuscarNemonico" class="invalid-feedback">
+                                El  campo no puede estar en blanco
+                            </div>
+                        </div>
+                        <label for="DescripcionBuscar" class="form-label">Descripcion</label>
+                        <div class="input-group has-validation">
+                            <input type="text" class="form-control" placeholder="Descripcion" name="Descripcion" id="buscarDescripcion" aria-describedby="inputGroupPrepend">
+                            <div id="BuscarDescripcion" class="invalid-feedback">
+                                El  campo no puede estar en blanco
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    @*modal nuevo Producto*@
+    <form id="frmValidacionProducto" asp-action="GuardarCambios" asp-controller="Producto" method="post" class="row g-3 needs-validation">
+        <div class="modal fade" id="ModalNuevo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <label class="form-label">Descripcion</label>
+                        <div class="input-group has-validation">
+                            <input type="text" onkeyup="mayus(this);" class="form-control" placeholder="" aria-label="Descripcion" name="Descripcion" id="validationDescripcion" aria-describedby="inputGroupPrepend">
+                            <div class="invalid-feedback" id="validacionDescripcion">
+                                El campo no puede estar en blanco
+                            </div>
+                        </div>
+
+                        <label for="validationPrecioUnitario" class="form-label">Precio</label>
+                        <div class="input-group has-validation">
+                            <input type="text" class="form-control" placeholder="" aria-label="PrecioUnitario" name="PrecioUnitario" id="PrecioUnitario" aria-describedby="inputGroupPrepend">
+                            <div id="validacionPrecioUnitario" class="invalid-feedback">
+                                Precio Incorrecto
+                            </div>
+                        </div>
+                        <label for="validationDireccion" class="form-label">Descuento</label>
+                        <div class="input-group has-validation">
+                            <input type="text" class="form-control" placeholder="" aria-label="PorcentajeDescuento" name="PorcentajeDescuento" id="validationPorcentajeDescuento" aria-describedby="inputGroupPrepend" value="0">
+                            <div id="validacionPorcentajeDescuento" class="invalid-feedback">
+                            </div>
+                        </div>
+                        <label for="validationDireccion" class="form-label">Stok</label>
+                        <div class="input-group has-validation">
+                            <input type="text" class="form-control" placeholder="Stok" aria-label="Stok" name="Stok" id="Stok" aria-describedby="inputGroupPrepend" value="1">
+                            <div id="validacionPorcentajeDescuento" class="invalid-feedback">
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
